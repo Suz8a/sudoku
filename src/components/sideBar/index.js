@@ -6,14 +6,17 @@ function SideBar() {
   return (
     <SideMenu>
       <Title>Sudoku</Title>
-      <div style={{ paddingBottom: "40px" }}>Probabilidades</div>
-      <div style={{ width: "80%", marginBottom: "25%" }}>
-        <TextInput title="Cruza" />
+      <div style={{ paddingBottom: "20%" }}>Datos</div>
+      <div style={{ width: "80%", marginBottom: "10%" }}>
+        <TextInput title="% Cruza" />
       </div>
-      <div style={{ width: "80%", marginBottom: "40%" }}>
-        <TextInput title="Mutacion" />
+      <div style={{ width: "80%", marginBottom: "10%" }}>
+        <TextInput title="% Mutacion" />
       </div>
-      <div style={{ width: "80%", marginBottom: "20%" }}>
+      <div style={{ width: "80%", marginBottom: "30%" }}>
+        <TextInput title="Número de generaciones" />
+      </div>
+      <div style={{ width: "80%" }}>
         <MyButton color="primary">Iniciar</MyButton>
       </div>
     </SideMenu>
