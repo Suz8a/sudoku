@@ -11,7 +11,7 @@ function Graphic({ fitness }) {
   console.log(numGeneration);
   console.log(fitness);
   const data = {
-    labels: [numGeneration],
+    labels: numGeneration,
     datasets: [
       {
         label: "Performance",

@@ -411,8 +411,8 @@ function Main() {
       aptitud = 0;
 
       seleccionTorneo(generacionActual);
-      cruzaIndividuos(generacionActual, 0.8);
-      mutarGeneracion(generacionActual, 0.1);
+      cruzaIndividuos(generacionActual, cruza);
+      mutarGeneracion(generacionActual, mutacion);
 
       generacionActual.map((individuo) => {
         aptitud = 91 - evaluarAptitud(individuo);
@@ -431,12 +431,9 @@ function Main() {
   async function onInicioClick() {
     try {
       setisLoading(true);
-      console.log(cruza);
-      console.log(mutacion);
-      console.log(generaciones);
 
       generarPrimeraGeneracion();
-      setfitness(iniciarProceso(10));
+      setfitness(iniciarProceso(generaciones));
     } catch {
       console.log("error");
     }
@@ -453,9 +450,6 @@ function Main() {
           onInputGeneraciones={onInputGeneraciones}
           onInicioClick={onInicioClick}
         />
-        <InformationContainer>
-          <CircularProgress />
-        </InformationContainer>
       </MainContainer>
     );
 
