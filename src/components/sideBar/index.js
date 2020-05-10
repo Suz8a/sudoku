@@ -7,6 +7,7 @@ function SideBar({
   onInputMutacion,
   onInputGeneraciones,
   onInicioClick,
+  onInputNumIndividuos
 }) {
   return (
     <SideMenu>
@@ -17,6 +18,9 @@ function SideBar({
       </div>
       <div style={{ width: "80%", marginBottom: "10%" }}>
         <TextInput title="% Mutacion" onInput={onInputMutacion} />
+      </div>
+      <div style={{ width: "80%", marginBottom: "10%" }}>
+        <TextInput title="Numero de individuos por generación" onInput={onInputNumIndividuos} />
       </div>
       <div style={{ width: "80%", marginBottom: "30%" }}>
         <TextInput

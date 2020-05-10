@@ -8,6 +8,7 @@ function Main() {
   const [cruza, setcruza] = useState(0);
   const [mutacion, setmutacion] = useState(0);
   const [generaciones, setgeneraciones] = useState(0);
+  const [numIndividuos, setnumindividuos] = useState(0);
   const [generacionActual, setgeneracionActual] = useState([]);
   const [numGeneration, setnumGeneration] = useState([]);
   const [fitness, setfitness] = useState([]);
@@ -38,6 +39,10 @@ function Main() {
 
   function onInputGeneraciones(e) {
     setgeneraciones(e.target.value);
+  }
+
+  function onInputNumIndividuos(e){
+    setnumindividuos(e.target.value)
   }
 
   //Functionality
@@ -395,10 +400,11 @@ function Main() {
     });
   };
 
-  const generarPrimeraGeneracion = () => {
-    for (var i = 0; i < 10; i++) {
+  const generarGeneracion = (numIndividuos) => {
+    for (var i = 0; i < numIndividuos; i++) {
       generacionActual.push(generarIndividuo());
     }
+    console.log(generacionActual)
   };
 
   const iniciarProceso = (generaciones) => {
@@ -407,20 +413,27 @@ function Main() {
     var mejoresAptitudes = [];
 
     for (var i = 0; i < generaciones; i++) {
-      mejorAptitud = 0;
-      aptitud = 0;
+      setsudoku(generacionActual[mejorAptitud[1]])
+
+      setgeneracionActual([])
+      generarGeneracion(numIndividuos)
+
+
+      mejorAptitud = [0,0];
+      aptitud = [0,0];
+      
 
       seleccionTorneo(generacionActual);
       cruzaIndividuos(generacionActual, cruza);
       mutarGeneracion(generacionActual, mutacion);
 
-      generacionActual.map((individuo) => {
-        aptitud = 91 - evaluarAptitud(individuo);
-        if (mejorAptitud == 0) mejorAptitud = aptitud;
-        if (aptitud > mejorAptitud) mejorAptitud = aptitud;
+      generacionActual.map((individuo, index) => {
+        aptitud = [91 - evaluarAptitud(individuo),index];
+        if (mejorAptitud == [0,0]) mejorAptitud = aptitud;
+        if (aptitud[0] > mejorAptitud[0]) mejorAptitud = aptitud;
       });
 
-      mejoresAptitudes.push(mejorAptitud);
+      mejoresAptitudes.push(mejorAptitud[0]);
     }
 
     return mejoresAptitudes;
@@ -432,7 +445,7 @@ function Main() {
     try {
       setisLoading(true);
 
-      generarPrimeraGeneracion();
+      generarGeneracion(numIndividuos);
       setfitness(iniciarProceso(generaciones));
     } catch {
       console.log("error");
@@ -448,6 +461,7 @@ function Main() {
           onInputCruza={onInputCruza}
           onInputMutacion={onInputMutacion}
           onInputGeneraciones={onInputGeneraciones}
+          onInputNumIndividuos={onInputNumIndividuos}
           onInicioClick={onInicioClick}
         />
       </MainContainer>
@@ -459,6 +473,7 @@ function Main() {
         onInputCruza={onInputCruza}
         onInputMutacion={onInputMutacion}
         onInputGeneraciones={onInputGeneraciones}
+        onInputNumIndividuos={onInputNumIndividuos}
         onInicioClick={onInicioClick}
       />
       <InformationContainer>
