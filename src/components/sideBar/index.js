@@ -2,22 +2,32 @@ import React from "react";
 import { SideMenu, Title, MyButton } from "./styled";
 import TextInput from "../textInput";
 
-function SideBar() {
+function SideBar({
+  onInputCruza,
+  onInputMutacion,
+  onInputGeneraciones,
+  onInicioClick,
+}) {
   return (
     <SideMenu>
       <Title>Sudoku</Title>
       <div style={{ paddingBottom: "20%" }}>Datos</div>
       <div style={{ width: "80%", marginBottom: "10%" }}>
-        <TextInput title="% Cruza" />
+        <TextInput title="% Cruza" onInput={onInputCruza} />
       </div>
       <div style={{ width: "80%", marginBottom: "10%" }}>
-        <TextInput title="% Mutacion" />
+        <TextInput title="% Mutacion" onInput={onInputMutacion} />
       </div>
       <div style={{ width: "80%", marginBottom: "30%" }}>
-        <TextInput title="Número de generaciones" />
+        <TextInput
+          title="Número de generaciones"
+          onInput={onInputGeneraciones}
+        />
       </div>
       <div style={{ width: "80%" }}>
-        <MyButton color="primary">Iniciar</MyButton>
+        <MyButton color="primary" onClick={onInicioClick}>
+          Iniciar
+        </MyButton>
       </div>
     </SideMenu>
   );

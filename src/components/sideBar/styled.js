@@ -9,6 +9,7 @@ export const SideMenu = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  float: left;
 `;
 
 export const Title = styled.div`

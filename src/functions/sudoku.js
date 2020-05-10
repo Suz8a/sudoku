@@ -423,14 +423,33 @@ export const generarPoblacion = (numPoblacion, sudoku) => {
   return sudoku;
 };
 
-//Generacion 0
-generacionActual.push(generarIndividuo());
-generacionActual.push(generarIndividuo());
-generacionActual.push(generarIndividuo());
-generacionActual.push(generarIndividuo());
+export const generarPrimeraGeneracion = (numIndividuos) => {
+  for (var i = 0; i < numGeneraciones; i++) {
+    generacionActual.push(generarIndividuo());
+  }
+};
 
-console.log(generarPoblacion(20, sudoku));
+export const iniciarProceso = (numGeneraciones) => {
+  var mejorAptitud = 0;
+  var aptitud = 0;
+  var mejoresAptitudes = [];
 
-//seleccionTorneo(generacionActual)
-//cruzaIndividuos(generacionActual,0.8)
-//mutarGeneracion(generacionActual,0.1)
+  for (var i = 0; i < numGeneraciones; i++) {
+    mejorAptitud = 0;
+    aptitud = 0;
+
+    seleccionTorneo(generacionActual);
+    cruzaIndividuos(generacionActual, 0.8);
+    mutarGeneracion(generacionActual, 0.1);
+
+    generacionActual.map((individuo) => {
+      aptitud = evaluarAptitud(individuo);
+      if (mejorAptitud == 0) mejorAptitud = 91 - aptitud;
+      if (aptitud > mejorAptitud) mejorAptitud = aptitud;
+    });
+
+    mejoresAptitudes.push(mejorAptitud);
+  }
+
+  return mejoresAptitudes;
+};

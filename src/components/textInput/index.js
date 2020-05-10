@@ -1,10 +1,16 @@
 import React from "react";
 import { Input } from "./styled";
 
-function TextInput({ title }) {
+function TextInput({ title, onInput }) {
   return (
     <div>
-      <Input label={title} color="secondary" variant="outlined" type="number" />
+      <Input
+        label={title}
+        color="secondary"
+        variant="outlined"
+        type="number"
+        onInput={onInput}
+      />
     </div>
   );
 }
