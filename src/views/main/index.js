@@ -10,7 +10,6 @@ function Main() {
   const [generaciones, setgeneraciones] = useState(0);
   const [numIndividuos, setnumindividuos] = useState(0);
   const [generacionActual, setgeneracionActual] = useState([]);
-  const [numGeneration, setnumGeneration] = useState([]);
   const [fitness, setfitness] = useState([]);
   const [sudoku, setsudoku] = useState([
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -24,6 +23,7 @@ function Main() {
     [0, 0, 0, 0, 8, 0, 0, 7, 9],
   ]);
 
+  var bestSudoku = [];
   var i = 0;
   var z = 0;
   //Loading state
@@ -41,8 +41,8 @@ function Main() {
     setgeneraciones(e.target.value);
   }
 
-  function onInputNumIndividuos(e){
-    setnumindividuos(e.target.value)
+  function onInputNumIndividuos(e) {
+    setnumindividuos(e.target.value);
   }
 
   //Functionality
@@ -227,7 +227,7 @@ function Main() {
     posicionesGeneradas.map((posiciones) => {
       posiciones.map((posicion, index) => {
         var vsIndex = index;
-        if (!index == 0) vsIndex += 1;
+        if (!index === 0) vsIndex += 1;
 
         if (vsIndex < posiciones.length - 1) {
           var candidato1 = generacionActual[vsIndex];
@@ -281,7 +281,7 @@ function Main() {
       posiciones.map((posicion, index) => {
         var probabilidadGenerada = Math.random();
         var swapIndex = index;
-        if (!index == 0) swapIndex += 1;
+        if (!index === 0) swapIndex += 1;
 
         if (
           swapIndex < posiciones.length - 1 &&
@@ -339,7 +339,7 @@ function Main() {
                 obtenerSeccion(index, z)
               );
 
-              if (isValid != true) {
+              if (isValid !== true) {
                 candidato2[index][z] = swapNumber;
               } else candidato2[index][z] = 0;
 
@@ -359,7 +359,7 @@ function Main() {
     var puntoSeleccionado = Math.floor(Math.random() * 9);
     var puntoIntercambio = Math.floor(Math.random() * 9);
 
-    while (puntoIntercambio == puntoSeleccionado) {
+    while (puntoIntercambio === puntoSeleccionado) {
       puntoIntercambio = Math.floor(Math.random() * 9);
     }
 
@@ -404,7 +404,6 @@ function Main() {
     for (var i = 0; i < numIndividuos; i++) {
       generacionActual.push(generarIndividuo());
     }
-    console.log(generacionActual)
   };
 
   const iniciarProceso = (generaciones) => {
@@ -413,29 +412,30 @@ function Main() {
     var mejoresAptitudes = [];
 
     for (var i = 0; i < generaciones; i++) {
-      setsudoku(generacionActual[mejorAptitud[1]])
+      setsudoku(generacionActual[mejorAptitud[1]]);
+      if (bestSudoku === []) bestSudoku = generacionActual[mejorAptitud[1]];
+      if (mejorAptitud[0] > 91 - evaluarAptitud(bestSudoku))
+        bestSudoku = generacionActual[mejorAptitud[1]];
 
-      setgeneracionActual([])
-      generarGeneracion(numIndividuos)
+      setgeneracionActual([]);
+      generarGeneracion(numIndividuos);
 
-
-      mejorAptitud = [0,0];
-      aptitud = [0,0];
-      
+      //mejorAptitud[aptitud,index en generacion]
+      mejorAptitud = [0, 0];
+      aptitud = [0, 0];
 
       seleccionTorneo(generacionActual);
       cruzaIndividuos(generacionActual, cruza);
       mutarGeneracion(generacionActual, mutacion);
 
       generacionActual.map((individuo, index) => {
-        aptitud = [91 - evaluarAptitud(individuo),index];
-        if (mejorAptitud == [0,0]) mejorAptitud = aptitud;
+        aptitud = [91 - evaluarAptitud(individuo), index];
+        if (mejorAptitud === [0, 0]) mejorAptitud = aptitud;
         if (aptitud[0] > mejorAptitud[0]) mejorAptitud = aptitud;
       });
 
       mejoresAptitudes.push(mejorAptitud[0]);
     }
-
     return mejoresAptitudes;
   };
 
