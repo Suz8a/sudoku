@@ -7,7 +7,7 @@ export const MainContainer = styled.div`
 
 export const InformationContainer = styled.div`
   width: 80%;
-  height: 100vh;
+  min-height: 100vh;
   float: right;
   display: flex;
   flex-direction: column;

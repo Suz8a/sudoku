@@ -12,6 +12,7 @@ function Main() {
   const [numIndividuos, setnumindividuos] = useState(0);
   const [generacionActual, setgeneracionActual] = useState([]);
   const [fitness, setfitness] = useState([]);
+  const [bestsudoku, setbestsudoku] = useState([]);
   const [sudoku, setsudoku] = useState([
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -24,7 +25,6 @@ function Main() {
     [0, 0, 0, 0, 8, 0, 0, 7, 9],
   ]);
 
-  var bestSudoku = [];
   var i = 0;
   var z = 0;
   //Loading state
@@ -410,13 +410,21 @@ function Main() {
   const iniciarProceso = (generaciones) => {
     var mejorAptitud = 0;
     var aptitud = 0;
+    var aptitudBestSudoku = 0;
     var mejoresAptitudes = [];
 
     for (var i = 0; i < generaciones; i++) {
       setsudoku(generacionActual[mejorAptitud[1]]);
-      if (bestSudoku === []) bestSudoku = generacionActual[mejorAptitud[1]];
-      if (mejorAptitud[0] > 91 - evaluarAptitud(bestSudoku))
-        bestSudoku = generacionActual[mejorAptitud[1]];
+      if (bestsudoku.length === 0) aptitudBestSudoku = 0;
+
+      if (bestsudoku.length === 0)
+        setbestsudoku(generacionActual[mejorAptitud[1]]);
+
+      if (mejorAptitud[0] > aptitudBestSudoku) {
+        setbestsudoku(generacionActual[mejorAptitud[1]]);
+        aptitudBestSudoku = mejorAptitud[0];
+      }
+      debugger;
 
       setgeneracionActual([]);
       generarGeneracion(numIndividuos);
@@ -431,7 +439,8 @@ function Main() {
 
       generacionActual.map((individuo, index) => {
         aptitud = [91 - evaluarAptitud(individuo), index];
-        if (mejorAptitud === [0, 0]) mejorAptitud = aptitud;
+        if (mejorAptitud[0] === 0 && mejorAptitud[1] === [0])
+          mejorAptitud = aptitud[0];
         if (aptitud[0] > mejorAptitud[0]) mejorAptitud = aptitud;
       });
 
@@ -479,7 +488,7 @@ function Main() {
       />
       <InformationContainer>
         <Graphic fitness={fitness} />
-        <SudokuGraph />
+        <SudokuGraph sudoku={bestsudoku} />
       </InformationContainer>
     </MainContainer>
   );

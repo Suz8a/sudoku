@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 
 export const SideMenu = styled.div`
   background-color: white;
-  height: 100vh;
+  height: 100%;
   width: 20%;
   box-shadow: 0px 16px 10px #00000033;
   display: flex;
