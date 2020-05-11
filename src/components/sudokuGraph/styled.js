@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { Paper } from "@material-ui/core";
 
-export const SudokuContainer = styled.div`
+export const SudokuContainer = styled(Paper)`
   float: right;
   width: 30%;
   height: 40%;
