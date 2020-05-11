@@ -10,6 +10,7 @@ export const InformationContainer = styled.div`
   height: 100vh;
   float: right;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;

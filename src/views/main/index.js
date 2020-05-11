@@ -3,6 +3,7 @@ import SideBar from "../../components/sideBar";
 import Graphic from "../../components/graphic";
 import { MainContainer, InformationContainer } from "./styled";
 import { CircularProgress } from "@material-ui/core";
+import SudokuGraph from "../../components/sudokuGraph";
 
 function Main() {
   const [cruza, setcruza] = useState(0);
@@ -478,6 +479,7 @@ function Main() {
       />
       <InformationContainer>
         <Graphic fitness={fitness} />
+        <SudokuGraph />
       </InformationContainer>
     </MainContainer>
   );
