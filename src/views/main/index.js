@@ -6,10 +6,10 @@ import { CircularProgress } from "@material-ui/core";
 import SudokuGraph from "../../components/sudokuGraph";
 
 function Main() {
-  const [cruza, setcruza] = useState(0.4);
-  const [mutacion, setmutacion] = useState(0.1);
-  const [generaciones, setgeneraciones] = useState(10);
-  const [numIndividuos, setnumindividuos] = useState(6);
+  const [cruza, setcruza] = useState(0);
+  const [mutacion, setmutacion] = useState(0);
+  const [generaciones, setgeneraciones] = useState(0);
+  const [numIndividuos, setnumindividuos] = useState(0);
   const [generacionActual, setgeneracionActual] = useState([]);
   const [fitness, setfitness] = useState([]);
   const [bestsudoku, setbestsudoku] = useState([]);
