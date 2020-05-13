@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../components/sideBar";
 import Graphic from "../../components/graphic";
 import { MainContainer, InformationContainer } from "./styled";
@@ -13,6 +13,7 @@ function Main() {
   const [generacionActual, setgeneracionActual] = useState([]);
   const [fitness, setfitness] = useState([]);
   const [bestsudoku, setbestsudoku] = useState([]);
+  const [lastsudoku, setlastsudoku] = useState([]);
   const [sudoku, setsudoku] = useState([
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -403,8 +404,9 @@ function Main() {
 
   const generarGeneracion = (numIndividuos) => {
     for (var i = 0; i < numIndividuos; i++) {
-      generacionActual.push(generarIndividuo());
+      generacionActual[i] = generarIndividuo();
     }
+    debugger;
   };
 
   const iniciarProceso = (generaciones) => {
@@ -412,40 +414,55 @@ function Main() {
     var aptitud = 0;
     var aptitudBestSudoku = 0;
     var mejoresAptitudes = [];
+    setsudoku([
+      [5, 3, 0, 0, 7, 0, 0, 0, 0],
+      [6, 0, 0, 1, 9, 5, 0, 0, 0],
+      [0, 9, 8, 0, 0, 0, 0, 6, 0],
+      [8, 0, 0, 0, 6, 0, 0, 0, 3],
+      [4, 0, 0, 8, 0, 3, 0, 0, 1],
+      [7, 0, 0, 0, 2, 0, 0, 0, 6],
+      [0, 6, 0, 0, 0, 0, 2, 8, 0],
+      [0, 0, 0, 4, 1, 9, 0, 0, 5],
+      [0, 0, 0, 0, 8, 0, 0, 7, 9],
+    ]);
 
     for (var i = 0; i < generaciones; i++) {
       setsudoku(generacionActual[mejorAptitud[1]]);
-      if (bestsudoku.length === 0) aptitudBestSudoku = 0;
-
-      if (bestsudoku.length === 0)
-        setbestsudoku(generacionActual[mejorAptitud[1]]);
-
-      if (mejorAptitud[0] > aptitudBestSudoku) {
-        setbestsudoku(generacionActual[mejorAptitud[1]]);
-        aptitudBestSudoku = mejorAptitud[0];
-      }
-      debugger;
-
-      setgeneracionActual([]);
-      generarGeneracion(numIndividuos);
 
       //mejorAptitud[aptitud,index en generacion]
       mejorAptitud = [0, 0];
       aptitud = [0, 0];
 
+      generarGeneracion(numIndividuos);
       seleccionTorneo(generacionActual);
       cruzaIndividuos(generacionActual, cruza);
       mutarGeneracion(generacionActual, mutacion);
 
       generacionActual.map((individuo, index) => {
-        aptitud = [91 - evaluarAptitud(individuo), index];
-        if (mejorAptitud[0] === 0 && mejorAptitud[1] === [0])
-          mejorAptitud = aptitud[0];
-        if (aptitud[0] > mejorAptitud[0]) mejorAptitud = aptitud;
+        aptitud = [81 - evaluarAptitud(individuo), index];
+
+        if (aptitud[0] > mejorAptitud[0]) {
+          mejorAptitud[0] = aptitud[0];
+          mejorAptitud[1] = aptitud[1];
+        }
       });
 
+      if (aptitudBestSudoku == 0) {
+        aptitudBestSudoku = mejorAptitud[0];
+        setbestsudoku(generacionActual[mejorAptitud[1]]);
+      }
+
+      if (mejorAptitud[0] > aptitudBestSudoku) {
+        setbestsudoku(generacionActual[mejorAptitud[1]]);
+        console.log(generacionActual[mejorAptitud[1]]);
+        aptitudBestSudoku = mejorAptitud[0];
+      }
+
       mejoresAptitudes.push(mejorAptitud[0]);
+      debugger;
     }
+    setlastsudoku(generacionActual[mejorAptitud[1]]);
+
     return mejoresAptitudes;
   };
 
@@ -454,8 +471,6 @@ function Main() {
   async function onInicioClick() {
     try {
       setisLoading(true);
-
-      generarGeneracion(numIndividuos);
       setfitness(iniciarProceso(generaciones));
     } catch {
       console.log("error");
@@ -488,7 +503,26 @@ function Main() {
       />
       <InformationContainer>
         <Graphic fitness={fitness} />
-        <SudokuGraph sudoku={bestsudoku} />
+        <div
+          style={{
+            float: "right",
+            width: "fit-content",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SudokuGraph
+            title={"Best sudoku"}
+            performance={81 - evaluarAptitud(bestsudoku)}
+            sudoku={bestsudoku}
+          />
+          <SudokuGraph
+            title={"Last sudoku"}
+            performance={81 - evaluarAptitud(lastsudoku)}
+            sudoku={lastsudoku}
+          />
+        </div>
       </InformationContainer>
     </MainContainer>
   );
