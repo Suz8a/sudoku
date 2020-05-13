@@ -6,10 +6,10 @@ import { CircularProgress } from "@material-ui/core";
 import SudokuGraph from "../../components/sudokuGraph";
 
 function Main() {
-  const [cruza, setcruza] = useState(0);
-  const [mutacion, setmutacion] = useState(0);
-  const [generaciones, setgeneraciones] = useState(0);
-  const [numIndividuos, setnumindividuos] = useState(0);
+  const [cruza, setcruza] = useState(0.4);
+  const [mutacion, setmutacion] = useState(0.1);
+  const [generaciones, setgeneraciones] = useState(10);
+  const [numIndividuos, setnumindividuos] = useState(6);
   const [generacionActual, setgeneracionActual] = useState([]);
   const [fitness, setfitness] = useState([]);
   const [bestsudoku, setbestsudoku] = useState([]);
@@ -145,11 +145,89 @@ function Main() {
     return valores;
   };
 
+  const obtenerValoresCuadranteIndividuo = (numSeccion, individuo) => {
+    var valores = [];
+    switch (numSeccion) {
+      case 1:
+        for (i = 0; i < 3; i++) {
+          for (z = 0; z < 3; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 2:
+        for (i = 0; i < 3; i++) {
+          for (z = 3; z < 6; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 3:
+        for (i = 0; i < 3; i++) {
+          for (z = 6; z < 9; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 4:
+        for (i = 3; i < 6; i++) {
+          for (z = 0; z < 3; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 5:
+        for (i = 3; i < 6; i++) {
+          for (z = 3; z < 6; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 6:
+        for (i = 3; i < 6; i++) {
+          for (z = 6; z < 9; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 7:
+        for (i = 6; i < 9; i++) {
+          for (z = 0; z < 3; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 8:
+        for (i = 6; i < 9; i++) {
+          for (z = 3; z < 6; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+      case 9:
+        for (i = 6; i < 9; i++) {
+          for (z = 6; z < 9; z++) {
+            valores.push(individuo[i][z]);
+          }
+        }
+        break;
+    }
+    return valores;
+  };
+
   const obtenerColumna = (posicion) => {
     var columna = [];
     sudoku.map((number) => {
       columna.push(number[posicion]);
     });
+    return columna;
+  };
+  const obtenerColumnaIndividuo = (posicion, individuo) => {
+    var columna = [];
+    individuo.map((fila) => {
+      columna.push(fila[posicion]);
+    });
+    debugger;
     return columna;
   };
 
@@ -168,9 +246,28 @@ function Main() {
     return isValid;
   };
 
-  const generarFila = (posicionFila) => {
+  const validarIndividuo = (num, fila, columna, numSeccion, individuo) => {
+    var isValid = false;
+    var valoresCuadrante = obtenerValoresCuadranteIndividuo(
+      numSeccion,
+      individuo
+    );
+    if (
+      num > 0 &&
+      num < 10 &&
+      !fila.includes(num) &&
+      !columna.includes(num) &&
+      !valoresCuadrante.includes(num)
+    ) {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  const generarFila = (posicionFila, individuo) => {
     var filaGenerada = [];
     var fila = sudoku[posicionFila];
+    var filaIndividuo = individuo[posicionFila];
 
     fila.map((numero, index) => {
       if (numero === 0) {
@@ -181,8 +278,15 @@ function Main() {
           obtenerColumna(index),
           obtenerSeccion(index, posicionFila)
         );
+        var isValid2 = validarIndividuo(
+          numRandom,
+          filaIndividuo,
+          obtenerColumnaIndividuo(index, individuo),
+          obtenerSeccion(index, posicionFila),
+          individuo
+        );
 
-        isValid && !filaGenerada.includes(numRandom)
+        isValid && isValid2 && !filaGenerada.includes(numRandom)
           ? filaGenerada.push(numRandom)
           : filaGenerada.push(0);
       } else {
@@ -193,9 +297,19 @@ function Main() {
   };
 
   const generarIndividuo = () => {
-    var individuo = [];
+    var individuo = [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ];
     for (var i = 0; i < 9; i++) {
-      individuo.push(generarFila(i));
+      individuo[i] = generarFila(i, individuo);
     }
     return individuo;
   };
@@ -406,7 +520,6 @@ function Main() {
     for (var i = 0; i < numIndividuos; i++) {
       generacionActual[i] = generarIndividuo();
     }
-    debugger;
   };
 
   const iniciarProceso = (generaciones) => {
@@ -459,7 +572,6 @@ function Main() {
       }
 
       mejoresAptitudes.push(mejorAptitud[0]);
-      debugger;
     }
     setlastsudoku(generacionActual[mejorAptitud[1]]);
 
